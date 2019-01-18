@@ -2,6 +2,8 @@
 
 The Solution Template for MarkLogic on Azure helps to deploy clusters on Azure. It is publicly offered on Azure Marketplace. This repository contains templates and resources to set up and initialize MarkLogic clusters with Azure features: Availability Set, Virtual Network, Application Gateway, Network Security Group, Virtual Machines, etc. MarkLogic features such as local-disk failover will be configured for the cluster.
 
+For deploying MarkLogic on AWS, please visit [cloud-enablement-aws](https://github.com/marklogic/cloud-enablement-aws).
+
 ## Getting Started
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmarklogic%2Fcloud-enablement%2Fmaster%2Fazure%2FmainTemplate.json" target="_blank">
