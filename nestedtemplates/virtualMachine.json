@@ -61,7 +61,7 @@
           },
           "storageProfile": {
             "imageReference": {
-              "id": "[resourceId('Microsoft.Compute/images', 'marklogic-108-01261644osDisk.vhd']"
+              "id": "[resourceId('Microsoft.Compute/images', 'marklogic-108-01261644osDisk.vhd')]"
             },
             "osDisk": {
                 "managedDisk": {
