@@ -1,84 +1,94 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "10.0-5.1",
-  "parameters": {
-    "vmSetting": {
-      "type": "object"
-    }
-  },
-  "variables": {
-      "availabilitySetId": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('vmSetting').availabilitySetName)]"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "10.0-5.1",
+    "parameters": {
+      "vmSetting": {
+        "type": "object"
       }
-  },
-  "resources": [
-    {
-      "apiVersion": "2019-12-01",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
-      "location": "[parameters('vmSetting').location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('vmSetting').count]"
-      },
-      "plan": {
-        "name": "[parameters('vmSetting').imageSku]",
-        "publisher": "[parameters('vmSetting').imagePublisher]",
-        "product": "[parameters('vmSetting').imageOffer]"
-      },
-      "properties": {
-        "availabilitySet": "[if(parameters('vmSetting').enableAvailabilitySet,variables('availabilitySetId'),json('null'))]",
-        "hardwareProfile": {
-          "vmSize": "[parameters('vmSetting').vmSize]"
-        },
-        "osProfile": {
-          "computername": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
-          "adminUsername": "[parameters('vmSetting').adminUsername]",
-          "customData": "[base64(concat('MARKLOGIC_LICENSE_KEY=',parameters('vmSetting').licenseKey,'\nMARKLOGIC_LICENSEE=',parameters('vmSetting').licensee,'\nMARKLOGIC_NODE_NAME=',reference(resourceId('Microsoft.Network/publicIpAddresses/',concat(parameters('vmSetting').nodePublicIpNameV4,copyIndex())), '2018-11-01').dnsSettings.fqdn,'\nMARKLOGIC_ADMIN_USERNAME=',parameters('vmSetting').mlAdminUsername,'\nMARKLOGIC_ADMIN_PASSWORD=',parameters('vmSetting').mlAdminPassword,'\nMARKLOGIC_AZURE_DISK=',parameters('vmSetting').azDisk))]",
-          "linuxConfiguration": {
-            "disablePasswordAuthentication": "true",
-            "ssh": {
-              "publicKeys": [
-                {
-                  "path": "[concat('/home/',parameters('vmSetting').adminUsername,'/.ssh/authorized_keys')]",
-                  "keyData": "[parameters('vmSetting').sshKey]"
-                }
-              ]
+    },
+    "variables": {
+        "availabilitySetId": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('vmSetting').availabilitySetName)]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/images",
+            "apiVersion": "2019-12-01",
+            "name": "marklogic-108-01261644osDisk.vhd",
+            "location": "[parameters('vmSetting').location]",
+            "properties": {
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Linux",
+                        "osState": "Generalized",
+                        "blobUri": "https://ea4testeldisks979.blob.core.windows.net/vhds/marklogic-108-01261644osDisk.vhd",
+                        "storageAccountType": "Premium_LRS"
+                    }
+                },
+                "hyperVGeneration": "V2"
             }
-          }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
+        "location": "[parameters('vmSetting').location]",
+        "copy": {
+          "name": "vmLoop",
+          "count": "[parameters('vmSetting').count]"
         },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "[parameters('vmSetting').imagePublisher]",
-            "offer": "[parameters('vmSetting').imageOffer]",
-            "sku": "[parameters('vmSetting').imageSku]",
-            "version": "[parameters('vmSetting').imageVersion]"
+        "properties": {
+          "availabilitySet": "[if(parameters('vmSetting').enableAvailabilitySet,variables('availabilitySetId'),json('null'))]",
+          "hardwareProfile": {
+            "vmSize": "[parameters('vmSetting').vmSize]"
           },
-          "osDisk": {
-            "managedDisk": {
-                "storageAccountType": "[parameters('vmSetting').osDiskAcctType]"
-            },
-            "createOption": "FromImage"
-          },
-          "dataDisks": [
-            {
-              "lun": "[parameters('vmSetting').azDisk]",
-              "diskSizeGB": "[parameters('vmSetting').dataDiskSizeGB]",
-              "createOption": "Empty",
-              "managedDisk": {
-                  "storageAccountType": "[parameters('vmSetting').dataDiskAcctType]"
+          "osProfile": {
+            "computername": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
+            "adminUsername": "[parameters('vmSetting').adminUsername]",
+            "customData": "[base64(concat('MARKLOGIC_LICENSE_KEY=',parameters('vmSetting').licenseKey,'\nMARKLOGIC_LICENSEE=',parameters('vmSetting').licensee,'\nMARKLOGIC_NODE_NAME=',reference(resourceId('Microsoft.Network/publicIpAddresses/',concat(parameters('vmSetting').nodePublicIpNameV4,copyIndex())), '2018-11-01').dnsSettings.fqdn,'\nMARKLOGIC_ADMIN_USERNAME=',parameters('vmSetting').mlAdminUsername,'\nMARKLOGIC_ADMIN_PASSWORD=',parameters('vmSetting').mlAdminPassword,'\nMARKLOGIC_AZURE_DISK=',parameters('vmSetting').azDisk))]",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": "true",
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "[concat('/home/',parameters('vmSetting').adminUsername,'/.ssh/authorized_keys')]",
+                    "keyData": "[parameters('vmSetting').sshKey]"
+                  }
+                ]
               }
             }
-          ]
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmSetting').networkInterfaceName,'-',copyIndex()))]"
-            }
-          ]
+          },
+          "storageProfile": {
+            "imageReference": {
+              "id": "[resourceId('Microsoft.Compute/images', 'marklogic-108-01261644osDisk.vhd']"
+            },
+            "osDisk": {
+                "managedDisk": {
+                    "storageAccountType": "[parameters('vmSetting').osDiskAcctType]"
+                },
+                "createOption": "FromImage"
+              },
+            "dataDisks": [
+              {
+                "lun": "[parameters('vmSetting').azDisk]",
+                "diskSizeGB": "[parameters('vmSetting').dataDiskSizeGB]",
+                "createOption": "Empty",
+                "managedDisk": {
+                    "storageAccountType": "[parameters('vmSetting').dataDiskAcctType]"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmSetting').networkInterfaceName,'-',copyIndex()))]"
+              }
+            ]
+          }
         }
       }
-    }
-  ]
-}
+    ]
+  }
+  
