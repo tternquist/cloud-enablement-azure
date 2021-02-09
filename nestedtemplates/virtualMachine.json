@@ -35,7 +35,7 @@
         "name": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
         "location": "[parameters('vmSetting').location]",
         "dependsOn": [
-                "['marklogic-108-01261644osDisk.vhd']"
+                "[resourceId('Microsoft.Compute/images', 'marklogic-108-01261644osDisk.vhd')]"
             ],
         "copy": {
           "name": "vmLoop",
