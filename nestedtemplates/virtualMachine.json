@@ -15,14 +15,14 @@
         {
             "type": "Microsoft.Compute/images",
             "apiVersion": "2019-12-01",
-            "name": "marklogic-108-01261644osDisk.vhd",
+            "name": "VHDimage",
             "location": "[parameters('vmSetting').location]",
             "properties": {
                 "storageProfile": {
                     "osDisk": {
                         "osType": "Linux",
                         "osState": "Generalized",
-                        "blobUri": "https://ea4testeldisks979.blob.core.windows.net/vhds/marklogic-108-01261644osDisk.vhd",
+                        "blobUri": "https://ea4testeldisks979.blob.core.windows.net/vhds/marklogic-new8-02091741osDisk.vhd",
                         "storageAccountType": "Premium_LRS"
                     }
                 },
@@ -35,7 +35,7 @@
         "name": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
         "location": "[parameters('vmSetting').location]",
         "dependsOn": [
-                "[resourceId('Microsoft.Compute/images', 'marklogic-108-01261644osDisk.vhd')]"
+                "[resourceId('Microsoft.Compute/images', 'VHDimage')]"
             ],
         "copy": {
           "name": "vmLoop",
@@ -64,7 +64,7 @@
           },
           "storageProfile": {
             "imageReference": {
-              "id": "[resourceId('Microsoft.Compute/images', 'marklogic-108-01261644osDisk.vhd')]"
+              "id": "[resourceId('Microsoft.Compute/images', 'VHDimage')]"
             },
             "osDisk": {
                 "managedDisk": {
