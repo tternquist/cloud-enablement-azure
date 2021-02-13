@@ -22,8 +22,8 @@
                     "osDisk": {
                         "osType": "Linux",
                         "osState": "Generalized",
-                        "blobUri": "https://ea4testeldisks979.blob.core.windows.net/vhds/marklogic-new8-02091741osDisk.vhd",
-                        "storageAccountType": "Premium_LRS"
+                        "blobUri": "https://standardstoragejune22.blob.core.windows.net/vhds/marklogic-final7-02091808osDisk.vhd",
+                        "storageAccountType": "Standard_LRS"
                     }
                 },
                 "hyperVGeneration": "V2"
