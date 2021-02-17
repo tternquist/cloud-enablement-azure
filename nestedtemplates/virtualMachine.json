@@ -15,7 +15,7 @@
         {
             "type": "Microsoft.Compute/images",
             "apiVersion": "2019-12-01",
-            "name": "VHDimage",
+            "name": "VHDimage-cent7",
             "location": "[parameters('vmSetting').location]",
             "properties": {
                 "storageProfile": {
@@ -35,7 +35,7 @@
         "name": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
         "location": "[parameters('vmSetting').location]",
         "dependsOn": [
-                "[resourceId('Microsoft.Compute/images', 'VHDimage')]"
+                "[resourceId('Microsoft.Compute/images', 'VHDimage-cent7')]"
             ],
         "copy": {
           "name": "vmLoop",
@@ -64,7 +64,7 @@
           },
           "storageProfile": {
             "imageReference": {
-              "id": "[resourceId('Microsoft.Compute/images', 'VHDimage')]"
+              "id": "[resourceId('Microsoft.Compute/images', 'VHDimage-cent7')]"
             },
             "osDisk": {
                 "managedDisk": {
