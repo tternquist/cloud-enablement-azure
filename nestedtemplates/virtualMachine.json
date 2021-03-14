@@ -15,18 +15,18 @@
         {
             "type": "Microsoft.Compute/images",
             "apiVersion": "2019-12-01",
-            "name": "VHDimage-cent7",
+            "name": "VHDimage-cent8",
             "location": "[parameters('vmSetting').location]",
             "properties": {
                 "storageProfile": {
                     "osDisk": {
                         "osType": "Linux",
                         "osState": "Generalized",
-                        "blobUri": "https://standardstoragejune22.blob.core.windows.net/vhds/marklogic-mar11c7-03111825osDisk.vhd",
-                        "storageAccountType": "Standard_LRS"
+                        "blobUri": "https://ea4testeldisks979.blob.core.windows.net/vhds/marklogic-mar11c8-03111909osDisk.vhd",
+                        "storageAccountType": "Premium_LRS"
                     }
                 },
-                "hyperVGeneration": "V1"
+                "hyperVGeneration": "V2"
             }
       },
       {
@@ -35,7 +35,7 @@
         "name": "[concat(parameters('vmSetting').vmName,'-',copyIndex())]",
         "location": "[parameters('vmSetting').location]",
         "dependsOn": [
-                "[resourceId('Microsoft.Compute/images', 'VHDimage-cent7')]"
+                "[resourceId('Microsoft.Compute/images', 'VHDimage-cent8')]"
             ],
         "copy": {
           "name": "vmLoop",
@@ -64,7 +64,7 @@
           },
           "storageProfile": {
             "imageReference": {
-              "id": "[resourceId('Microsoft.Compute/images', 'VHDimage-cent7')]"
+              "id": "[resourceId('Microsoft.Compute/images', 'VHDimage-cent8')]"
             },
             "osDisk": {
                 "managedDisk": {
