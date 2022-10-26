@@ -4,9 +4,6 @@
   "parameters": {
     "appGatewaySetting": {
       "type": "object"
-    },
-    "publicAppGatewayIpSetting": {
-      "type": "object"
     }
   },
   "variables": {
