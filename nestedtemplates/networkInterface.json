@@ -1,50 +1,47 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "10.0-9.2",
-    "parameters": {
-        "networkInterfaceSetting": {
-            "type": "object"
-        }
-    },
-    "variables": {
-        "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('networkInterfaceSetting').vnetName, parameters('networkInterfaceSetting').subnetName)]",
-        "appGatewayBackendPoolId": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools',parameters('networkInterfaceSetting').appGatewayName,parameters('networkInterfaceSetting').appGatewayBackendPoolName)]"
-    },
-    "resources": [
-        {
-            "name": "[concat(parameters('networkInterfaceSetting').name,'-',copyIndex())]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2020-04-01",
-            "location": "[parameters('networkInterfaceSetting').location]",
-            "copy": {
-                "name": "networkInterfaceLoop",
-                "count": "[parameters('networkInterfaceSetting').count]"
-            },
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "10.0-9.2",
+  "parameters": {
+    "networkInterfaceSetting": {
+      "type": "object"
+    }
+  },
+  "variables": {
+    "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('networkInterfaceSetting').vnetName, parameters('networkInterfaceSetting').subnetName)]",
+    "appGatewayBackendPoolId": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools',parameters('networkInterfaceSetting').appGatewayName,parameters('networkInterfaceSetting').appGatewayBackendPoolName)]"
+  },
+  "resources": [
+    {
+      "name": "[concat(parameters('networkInterfaceSetting').name,'-',copyIndex())]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2020-04-01",
+      "location": "[parameters('networkInterfaceSetting').location]",
+      "copy": {
+        "name": "networkInterfaceLoop",
+        "count": "[parameters('networkInterfaceSetting').count]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
             "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig",
-                        "properties": {
-                            "subnet": {
-                                "id": "[variables('subnetId')]"
-                            },
-                            "primary": true,
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIpAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIpAddresses',concat(parameters('networkInterfaceSetting').nodePublicIpName,copyIndex()))]"
-                            },
-                            "applicationGatewayBackendAddressPools": [
-                              {
-                                "id": "[variables('appGatewayBackendPoolId')]"
-                              }
-                            ]
-                        }
-                    }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('networkInterfaceSetting').nsgName)]"
+              "subnet": {
+                "id": "[variables('subnetId')]"
+              },
+              "primary": true,
+              "privateIPAllocationMethod": "Dynamic",
+              "applicationGatewayBackendAddressPools": [
+                {
+                  "id": "[variables('appGatewayBackendPoolId')]"
                 }
+              ]
             }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('networkInterfaceSetting').nsgName)]"
         }
-    ]
+      }
+    }
+  ]
 }
