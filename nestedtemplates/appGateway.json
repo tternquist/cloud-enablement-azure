@@ -83,7 +83,6 @@
       "name": "[variables('appGatewayname')]",
       "type": "Microsoft.Network/applicationGateways",
       "location": "[parameters('appGatewaySetting').location]",
-      "dependsOn": ["[parameters('publicAppGatewayIpSetting').name]"],
       "properties": {
         "sku": {
           "name": "Standard_v2",
