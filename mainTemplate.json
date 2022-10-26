@@ -110,7 +110,7 @@
     "VirtualMachineUser": {
       "type": "string",
       "minLength": 0,
-      "defaultValue": "test",
+      "defaultValue": "anotherUser",
       "metadata": {
         "description": "Operating system user name for virtual machines"
       }
@@ -118,7 +118,7 @@
     "SSHPublicKey": {
       "type": "securestring",
       "minLength": 0,
-      "defaultValue": "Test",
+      "defaultValue": "test",
       "metadata": {
         "description": "Public SSH key for virtual machine user specified"
       }
