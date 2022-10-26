@@ -4,6 +4,9 @@
   "parameters": {
     "appGatewaySetting": {
       "type": "object"
+    },
+    "publicAppGatewayIpSetting": {
+      "type": "object"
     }
   },
   "variables": {
@@ -77,9 +80,26 @@
   "resources": [
     {
       "apiVersion": "2020-04-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('publicAppGatewayIpSetting').name]",
+      "location": "[parameters('publicAppGatewayIpSetting').location]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicAppGatewayIpSetting').IPAllocationMethod]",
+        "publicIPAddressVersion": "IPv4",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('publicAppGatewayIpSetting').domainNameLabel]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2020-04-01",
       "name": "[variables('appGatewayname')]",
       "type": "Microsoft.Network/applicationGateways",
       "location": "[parameters('appGatewaySetting').location]",
+      "dependsOn": ["[parameters('publicAppGatewayIpSetting').name]"],
       "properties": {
         "sku": {
           "name": "Standard_v2",
@@ -99,7 +119,11 @@
         "frontendIPConfigurations": [
           {
             "name": "[parameters('appGatewaySetting').appGatewayIpConfigName]",
-            "properties": {}
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicAppGatewayIpSetting').name)]"
+              }
+            }
           }
         ],
         "frontendPorts": "[variables('frontendPortsArray')]",
