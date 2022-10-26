@@ -93,7 +93,7 @@
     },
     "OSStorage": {
       "type": "string",
-      "defaultValue": "premium",
+      "defaultValue": "standard",
       "allowedValues": ["premium", "standard"],
       "metadata": {
         "description": "Storage type for operating system of virtual machines"
@@ -101,7 +101,7 @@
     },
     "DataStorage": {
       "type": "string",
-      "defaultValue": "premium",
+      "defaultValue": "standard",
       "allowedValues": ["premium", "standard"],
       "metadata": {
         "description": "Storage type for data directory of virtual machines"
@@ -110,6 +110,7 @@
     "VirtualMachineUser": {
       "type": "string",
       "minLength": 0,
+      "defaultValue": "test",
       "metadata": {
         "description": "Operating system user name for virtual machines"
       }
